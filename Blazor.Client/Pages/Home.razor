@@ -1,0 +1,31 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Global> Loc
+
+<PageTitle>Home</PageTitle>
+
+<h1>Home @(OperatingSystem.IsBrowser() ? "Wasm" : "Server")</h1>
+
+<h1>@Loc["Hello"]</h1>
+
+Welcome to your new app.
+
+<button name="en-US" @onclick='(e) => ChangeCulture("en-US")'>
+    Press here to change hte language to English
+</button>
+
+<button name="fr-FR" @onclick='(e) => ChangeCulture("fr-FR")'>
+    Press here to change the language to French
+</button>
+
+
+@code {
+     void ChangeCulture(string culture)
+        {
+            var redirect = new Uri(NavigationManager.Uri).GetComponents(UriComponents.PathAndQuery | UriComponents.Fragment, UriFormat.UriEscaped);
+
+            var query = $"?culture={Uri.EscapeDataString(culture)}&redirectUri={redirect}";
+
+            NavigationManager.NavigateTo("Culture/SetCulture" + query, forceLoad: true);
+        }
+}
